@@ -22,10 +22,9 @@ def main(query: str, repo: str):
 
     client = get_mongo_client()
 
-    mongo_store = MongoDBAtlasVectorSearch(client, 
-                                     index_name='mistr', 
-                                     db_name='attn_db', 
-                                     collection_name='vec')
+    mongo_store = MongoDBAtlasVectorSearch(
+        client, index_name="mistr", db_name="attn_db", collection_name="vec"
+    )
 
     home_dir = os.path.expanduser("~")
     file_path = os.path.join(home_dir, ".mistral_api_key")
@@ -38,11 +37,13 @@ def main(query: str, repo: str):
         raise
     answer = retrieve_(store=mongo_store, query=query)
     topics = get_topics(query, api_key=api_key)
+    print(f"<h2>{query}</h2>")
     print(f"<p>{answer}</p>")
     questions = []
+    print("<h1>Further Reading</h1>")
     for topic in topics:
-        print(f"<h1>{topic}</h1>")
-        
+        print(f"<h2>{topic}</h2>")
+
         print(f"<p>{get_summaries(topic, api_key)}</p>")
         print("<br>")
         question = get_questions(topic, api_key)
@@ -60,7 +61,7 @@ def main(query: str, repo: str):
             )
     print('<input type="button" value="Submit" onclick="calculateScore()">')
     print("</form>")
-
+    print("<br>")
     print('<div id="result"></div>')
 
     print('<script type="text/javascript">')
@@ -83,3 +84,4 @@ def main(query: str, repo: str):
         }
         </script>"""
     )
+    print("<p>Powered by MistralAI</p>")
