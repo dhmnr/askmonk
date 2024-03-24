@@ -2,6 +2,9 @@ import click
 import os
 import json
 from .get_topics import get_topics, get_summaries, get_questions
+from .repo import create_vector_data, retrieve_, _set_settings_, get_mongo_client
+
+from llama_index.vector_stores.mongodb import MongoDBAtlasVectorSearch
 
 
 @click.command()
@@ -15,6 +18,15 @@ from .get_topics import get_topics, get_summaries, get_questions
 )
 def main(query: str, repo: str):
 
+    _set_settings_()
+
+    client = get_mongo_client()
+
+    mongo_store = MongoDBAtlasVectorSearch(client, 
+                                     index_name='mistr', 
+                                     db_name='attn_db', 
+                                     collection_name='vec')
+
     home_dir = os.path.expanduser("~")
     file_path = os.path.join(home_dir, ".mistral_api_key")
 
@@ -24,10 +36,13 @@ def main(query: str, repo: str):
     except Exception as e:
         print(f"Error reading the api key file: {e}")
         raise
+    answer = retrieve_(store=mongo_store, query=query)
     topics = get_topics(query, api_key=api_key)
+    print(f"<p>{answer}</p>")
     questions = []
     for topic in topics:
         print(f"<h1>{topic}</h1>")
+        
         print(f"<p>{get_summaries(topic, api_key)}</p>")
         print("<br>")
         question = get_questions(topic, api_key)

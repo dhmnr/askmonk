@@ -36,13 +36,13 @@ def get_mongo_client():
     client = MongoClient(uri)
     try:
         client.admin.command('ping')
-        print("Pinged your deployment. You successfully connected to MongoDB!")
+        #print("Pinged your deployment. You successfully connected to MongoDB!")
     except Exception as e:
         print(e)
 
     return client
 
-def create_vector_data(client, store, path):
+def create_vector_data(store, path):
     
     uber_docs = SimpleDirectoryReader(input_dir=path).load_data()
 
