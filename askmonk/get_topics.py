@@ -39,7 +39,40 @@ def get_topics(user_query, api_key, model="mistral-large"):
 
 def get_summaries(topic, api_key, model="mistral-large"):
     client = MistralClient(api_key=api_key)
-    prompt = f"Write a short summary of about the topic and clear and concise explanation.Do not provide explanations or notes or anything other than the answer.\nTopic:{topic}"
+    prompt = f"Write a short summary of about the topic and clear and concise explanation. Do not provide explanations or notes or anything other than the answer.\nTopic:{topic}"
     summary = [ChatMessage(role="user", content=prompt)]
     chat_response = client.chat(model=model, messages=summary)
+    return chat_response.choices[0].message.content
+
+
+def get_questions(topic, api_key, model="mistral-large"):
+    client = MistralClient(api_key=api_key)
+    prompt = f"""
+    You are a questionaire bot. Provide a Multiple choice question on the given topic in json format, medium level difficulty. Do not provide explanations or notes or anything other than the answer.
+    
+    ####
+    Here are some examples:
+    Topic: Water Cycle
+    Output: 
+    {{
+        "question": "What process in the water cycle is responsible for forming clouds?",
+        "options": {{
+            "a": "Precipitation",
+            "b": "Condensation",
+            "c": "Evaporation",
+            "d": "Collection"
+        }},
+        "correct_answer": "b",
+    }}
+
+    <<<
+    Prompt: {topic}
+    >>>
+    """
+    summary = [ChatMessage(role="user", content=prompt)]
+    chat_response = client.chat(
+        model=model,
+        response_format={"type": "json_object"},
+        messages=summary,
+    )
     return chat_response.choices[0].message.content

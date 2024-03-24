@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 click = "^8.1.7"
-mistralai = "0.0.12"
+mistralai = "0.1.2"
 
 [tool.poetry.scripts]
 askmonk = "askmonk.__main__:main"

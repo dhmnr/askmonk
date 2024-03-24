@@ -1,6 +1,7 @@
 import click
 import os
-from .get_topics import get_topics, get_summaries
+import json
+from .get_topics import get_topics, get_summaries, get_questions
 
 
 @click.command()
@@ -24,60 +25,46 @@ def main(query: str, repo: str):
         print(f"Error reading the api key file: {e}")
         raise
     topics = get_topics(query, api_key=api_key)
+    questions = []
     for topic in topics:
         print(f"<h1>{topic}</h1>")
         print(f"<p>{get_summaries(topic, api_key)}</p>")
         print("<br>")
+        question = get_questions(topic, api_key)
+        # print(question)
+        questions.append(json.loads(question))
         # generate quizzes
     print("<br>")
+    print("<h1>Quiz</h1>")
+    print('<form name="quiz">')
+    for qn, question in enumerate(questions):
+        print(f"<h2>{question['question']}</h2>")
+        for option in question["options"].keys():
+            print(
+                f'<input type="radio" id="q{qn+1}{option}" name="q{qn+1}" value="{question["options"][option]}"> {question["options"][option]}<br>'
+            )
+    print('<input type="button" value="Submit" onclick="calculateScore()">')
+    print("</form>")
+
+    print('<div id="result"></div>')
+
+    print('<script type="text/javascript">')
+    print("function calculateScore() {")
+    print("      var score = 0;")
+    print(f"      var totalQuestions = {len(questions)};")
+    for qn, question in enumerate(questions):
+        print(
+            f"""
+            if (document.getElementById('q{qn+1}{question['correct_answer']}').checked) {{
+                score++;
+            }}  
+            """
+        )
+
     print(
         """
-    <h1>Simple Quiz</h1>
-
-    <form name="quiz">
-        <p>1. What is 2 + 2?</p>
-        <input type="radio" id="q1a1" name="q1" value="3"> 3<br>
-        <input type="radio" id="q1a2" name="q1" value="4"> 4<br>
-        <input type="radio" id="q1a3" name="q1" value="5"> 5<br>
-
-        <p>2. Which planet is known as the Red Planet?</p>
-        <input type="radio" id="q2a1" name="q2" value="Venus"> Venus<br>
-        <input type="radio" id="q2a2" name="q2" value="Saturn"> Saturn<br>
-        <input type="radio" id="q2a3" name="q2" value="Mars"> Mars<br>
-
-        <p>3. What is the boiling point of water?</p>
-        <input type="radio" id="q3a1" name="q3" value="100"> 100°C<br>
-        <input type="radio" id="q3a2" name="q3" value="90"> 90°C<br>
-        <input type="radio" id="q3a3" name="q3" value="110"> 110°C<br>
-
-        <input type="button" value="Submit" onclick="calculateScore()">
-    </form>
-
-    <div id="result"></div>
-
-    <script type="text/javascript">
-        function calculateScore() {
-            var score = 0;
-            var totalQuestions = 3;
-            
-            // Question 1
-            if (document.getElementById('q1a2').checked) {
-                score++;
-            }
-
-            // Question 2
-            if (document.getElementById('q2a3').checked) {
-                score++;
-            }
-
-            // Question 3
-            if (document.getElementById('q3a1').checked) {
-                score++;
-            }
-
-            // Display result
             var result = "Your score: " + score + " out of " + totalQuestions;
             document.getElementById('result').innerHTML = result;
         }
-    </script>"""
+        </script>"""
     )
