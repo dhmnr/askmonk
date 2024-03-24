@@ -25,5 +25,6 @@ def main(query: str, repo: str):
         raise
     topics = get_topics(query, api_key=api_key)
     for topic in topics:
-        print(topic)
-        print(get_summaries(topic, api_key))
+        print(f"<h1>{topic}</h1>")
+        print(f"<p>{get_summaries(topic, api_key)}</p>")
+        print("<br>")
