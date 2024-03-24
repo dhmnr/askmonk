@@ -1,6 +1,6 @@
 import click
 import os
-from .get_topics import get_topics
+from .get_topics import get_topics, get_summaries
 
 
 @click.command()
@@ -23,4 +23,7 @@ def main(query: str, repo: str):
     except Exception as e:
         print(f"Error reading the api key file: {e}")
         raise
-    print(get_topics(query, api_key=api_key))
+    topics = get_topics(query, api_key=api_key)
+    for topic in topics:
+        print(topic)
+        print(get_summaries(topic, api_key))
