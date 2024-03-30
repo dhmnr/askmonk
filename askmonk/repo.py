@@ -18,7 +18,7 @@ from pymongo.mongo_client import MongoClient
 
 def _set_settings_():
 
-    api_key='TWfVrlX659GSTS9hcsgUcPZ8uNzfoQsg'
+    api_key=''
 
     llm = MistralAI(api_key=api_key, model="mistral-large-latest")
     embed_model = MistralAIEmbedding(model_name="mistral-embed", api_key=api_key)
@@ -31,7 +31,7 @@ def _set_settings_():
 
 
 def get_mongo_client():
-    uri = "mongodb+srv://harshavardhan816:WmttEfRSzEHtDwdM@tsar24.wsgvc28.mongodb.net/?retryWrites=true&w=majority&appName=tsar24"
+    uri = ""
 
     client = MongoClient(uri)
     try:
