@@ -164,4 +164,4 @@ Project Link: [https://github.com/dhmnr/askmonk](https://github.com/dhmnr/askmon
 [issues-shield]: https://img.shields.io/github/issues/dhmnr/askmonk.svg?style=for-the-badge
 [issues-url]: https://github.com/dhmnr/askmonk/issues
 [license-shield]: https://img.shields.io/github/license/dhmnr/askmonk.svg?style=for-the-badge
-[license-url]: https://github.com/dhmnr/askmonk/blob/master/LICENSE
+[license-url]: https://github.com/dhmnr/askmonk/blob/main/LICENSE
